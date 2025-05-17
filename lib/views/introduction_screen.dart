@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:news_hive/views/login_screen.dart';
 import 'package:news_hive/views/utils/helper.dart';
 
 class IntroductionScreen extends StatefulWidget {
@@ -34,6 +34,20 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  void nextPage() {
+    if (_currentPage < pageList.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
+  }
+
   @override
   void initState() {
     _pageController.addListener(() {
@@ -50,6 +64,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       backgroundColor: cWhite,
       body: SafeArea(
         child: Stack(
+          alignment: AlignmentDirectional.topEnd,
           children: [
             PageView.builder(
               controller: _pageController,
@@ -73,6 +88,52 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                       ),
                       vsSmall,
                       Text(pageList[index]['subtitle'], style: subtitle1),
+                      Spacer(),
+                      if (_currentPage == pageList.length - 1)
+                        ElevatedButton(
+                          onPressed: nextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: cPrimary,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text("Get Started"),
+                        )
+                      else
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed:
+                                  () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const LoginScreen(),
+                                    ),
+                                  ),
+                              child: const Text("Skip"),
+                            ),
+                            ElevatedButton(
+                              onPressed: nextPage,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: cPrimary,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text("Next"),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 );
